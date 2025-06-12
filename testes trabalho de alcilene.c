@@ -120,7 +120,7 @@ void alterarregistro()
 
     switch (op)
     {
-    case 6:
+    case 1:
         printf("DIGITE O NOME QUE DESEJAR ADICIONAR:\n");
         fgets(name, 50, stdin);
 

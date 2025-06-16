@@ -39,11 +39,10 @@ int validacao_numero(char entrada[])
 
     return 1;
 }
-
 int menu()
 {
     int opcao;
-    char validacao_opcao[MAX];
+    char validacao_atributo[MAX];
 
     do
     {
@@ -51,13 +50,13 @@ int menu()
         printf("\nESCOLHA UMA DAS OPCOES DO MENU:\n");
         printf("\n1 - CADASTRO\n2 - BUSCAR REGISTROS\n3 - LISTAR REGISTROS\n4 - ALTERAR REGISTRO\n5 - REMOVER REGISTROS\n6 - SAIR\n");
 
-        fgets(validacao_opcao, sizeof(validacao_opcao), stdin);
+        fgets(validacao_atributo, sizeof(validacao_atributo), stdin);
 
-        validacao_opcao[strcspn(validacao_opcao, "\n")] = '\0';
+        validacao_atributo[strcspn(validacao_atributo, "\n")] = '\0';
 
-        if (validacao_numero(validacao_opcao))
+        if (validacao_numero(validacao_atributo))
         {
-            opcao = atoi(validacao_opcao);
+            opcao = atoi(validacao_atributo);
         }
 
         else
@@ -96,7 +95,7 @@ int validacao_caracter(char entrada[])
 }
 void cadastro()
 {
-    char validacao_idade[MAX];
+    char validacao_atributo[MAX];
     char validacao_sexo[MAX];
     int opcao;
 
@@ -124,13 +123,13 @@ void cadastro()
         do
         {
             printf("IDADE DO PACIENTE:\n");
-            fgets(validacao_idade, sizeof(validacao_idade), stdin);
+            fgets(validacao_atributo, sizeof(validacao_atributo), stdin);
 
-            validacao_idade[strcspn(validacao_idade, "\n")] = '\0';
+            validacao_atributo[strcspn(validacao_atributo, "\n")] = '\0';
 
-            if (validacao_numero(validacao_idade))
+            if (validacao_numero(validacao_atributo))
             {
-                idade[n] = atoi(validacao_idade);
+                idade[n] = atoi(validacao_atributo);
 
                 if (idade[n] >= 0 && idade[n] <= 130)
                 {
@@ -204,7 +203,8 @@ void cadastro()
 
 void buscarregistros()
 {
-    int opcao;
+    char validacao_atributo[MAX];
+    int atributo_valido = 0;
     int atributo;
     int c = 0;
     char idade_busca[MAX];
@@ -213,243 +213,234 @@ void buscarregistros()
     char sexo_busca;
     char diagnostico_busca[MAX];
 
+    if (n == 0)
+    {
+        printf("SEM REGISTROS CADASTRADOS\n");
+        return;
+    }
+
+    system("cls");
     do
     {
-        system("cls");
-
-        do
-        {
-
         printf("\nDIGITE O NUMERO DO ATRIBUTO QUE DESEJA BUSCAR:\n");
         printf("1 - NOME\n2 - IDADE\n3 - SEXO\n4 - DIAGNOSTICO\n");
-        scanf("%d", &atributo);
-        getchar();
+        fgets(validacao_atributo, sizeof(validacao_atributo), stdin);
 
-            if(atributo < 1 || atributo > 4)
-            {
-                printf("\nOPCAO INVALIDA! DIGITE NOVAMENTE.\n");
-            }
+        validacao_atributo[strcspn(validacao_atributo, "\n")] = '\0';
 
-        }while(atributo < 1 || atributo > 4);
-
-
-        switch (atributo)
+        if (validacao_numero(validacao_atributo))
         {
-        case 1:
-            do
-            {
-                printf("\nDIGITE O NOME QUE DESEJA BUSCAR:\n");
-                fgets(nome_busca, sizeof(nome_busca), stdin);
-                nome_busca[strcspn(nome_busca, "\n")] = '\0';
-
-                if (strlen(nome_busca) == 0)
-                {
-                    printf("NOME INVALIDO! O CAMPO NAO PODE SER VAZIO.\n");
-                }
-
-            } while (strlen(nome_busca) == 0);
-
-            for (int i = 0; i < n; i++)
-            {
-                if (strcmp(nome[i], nome_busca) == 0)
-                {
-                    printf("\nREGISTRO %d:\n", i + 1);
-                    printf("NOME: %s\nIDADE: %d\nSEXO: %c\nDIAGNOSTICO: %s\n", nome[i], idade[i], sexo[i], diagnostico[i]);
-                    c++;
-                }
-            }
-
-            if (c == 0)
-                printf("\nNAO EXISTEM REGISTROS COM ESSE NOME!\n");
-
-            c = 0;
-            break;
-
-        case 2:
+            atributo = atoi(validacao_atributo);
+            atributo_valido = 1;
+        }
+        else
         {
-            int idade_valida = 0;
-
-            do
-            {
-                printf("DIGITE A IDADE QUE DESEJA BUSCAR:\n");
-                fgets(idade_busca, sizeof(idade_busca), stdin);
-                idade_busca[strcspn(idade_busca, "\n")] = '\0';
-
-                if (validacao_numero(idade_busca))
-                {
-                    idade_convertida = atoi(idade_busca);
-
-                    if (idade_convertida >= 0 && idade_convertida <= 130)
-                    {
-                        idade_valida = 1;
-                    }
-                    else
-                    {
-                        printf("IDADE FORA DO INTERVALO VALIDO!\n");
-                    }
-                }
-                else
-                {
-                    printf("IDADE INVALIDA! DIGITE APENAS NUMEROS.\n");
-                }
-
-            } while (!idade_valida);
-
-            for (int i = 0; i < n; i++)
-            {
-                if (idade[i] == idade_convertida)
-                {
-                    printf("\nREGISTRO %d:\n", i + 1);
-                    printf("NOME: %s\nIDADE: %d\nSEXO: %c\nDIAGNOSTICO: %s\n", nome[i], idade[i], sexo[i], diagnostico[i]);
-                    c++;
-                }
-            }
-
-            if (c == 0)
-            {
-                printf("NAO EXISTEM REGISTROS COM ESSA IDADE!\n");
-            }
-
-            c = 0;
-            break;
+            printf("DIGITE APENAS NUMEROS.\n");
         }
 
-        case 3:
-        {
-            char validacao_sexo[MAX];
-            int sexo_valido = 0;
-
-            do
-            {
-                printf("DIGITE O SEXO QUE DESEJA BUSCAR (M OU F):\n");
-                fgets(validacao_sexo, sizeof(validacao_sexo), stdin);
-                validacao_sexo[strcspn(validacao_sexo, "\n")] = '\0';
-
-                if (validacao_caracter(validacao_sexo))
-                {
-                    sexo_busca = toupper(validacao_sexo[0]);
-                    sexo_valido = 1;
-                }
-                else
-                {
-                    printf("SEXO INVALIDO! DIGITE APENAS 'M' OU 'F'.\n");
-                }
-
-            } while (!sexo_valido);
-
-            for (int i = 0; i < n; i++)
-            {
-                if (sexo[i] == sexo_busca)
-                {
-                    printf("\nREGISTRO %d:\n", i + 1);
-                    printf("NOME: %s\nIDADE: %d\nSEXO: %c\nDIAGNOSTICO: %s\n", nome[i], idade[i], sexo[i], diagnostico[i]);
-                    c++;
-                }
-            }
-
-            if (c == 0)
-            {
-                printf("NAO EXISTEM REGISTROS COM ESSE SEXO!\n");
-            }
-
-            c = 0;
-            break;
-        }
-
-        case 4:
-            do
-            {
-                printf("DIGITE O DIAGNOSTICO QUE DESEJA BUSCAR:\n");
-                fgets(diagnostico_busca, sizeof(diagnostico_busca), stdin);
-                diagnostico_busca[strcspn(diagnostico_busca, "\n")] = '\0';
-
-                if (strlen(diagnostico_busca) == 0)
-                {
-                    printf("DIAGNOSTICO INVALIDO! O CAMPO NAO PODE SER VAZIO.\n");
-                }
-
-            } while (strlen(diagnostico_busca) == 0);
-
-            for (int i = 0; i < n; i++)
-            {
-                if (strcmp(diagnostico[i], diagnostico_busca) == 0)
-                {
-                    printf("\nREGISTRO %d:\n, i + 1");
-                    printf("\n\nNOME: %s\nIDADE: %d\nSEXO: %c\nDIAGNOSTICO: %s\n", nome[i], idade[i], sexo[i], diagnostico[i]);
-                    c++;
-                }
-            }
-
-            if (c == 0)
-            {
-                printf("NAO EXISTEM REGISTROS COM ESSE DIAGNOSTICO!\n");
-            }
-            c = 0;
-            break;
-
-        default:
-            printf("\nOPCAO INVALIDA! DIGITE UMA OPCAO DE 1 A 4.\n");
-            break;
-        }
-
-        printf("\nDESEJA BUSCAR OUTRO REGISTRO?\n1 - SIM\n2 - NAO\n");
-        scanf("%d", &opcao);
-
-        getchar();
-
-    } while (opcao == 1);
-}
-
-void listarregistros()
-{
-    int opcion;
-
-    do
+    } while (!atributo_valido);
+    switch (atributo)
     {
-
-        printf("REGISTROS CADASTRADOS:\n\n");
-
-        if (n == 0)
+    case 1:
+        do
         {
-            printf("NENHUM REGISTRO CADASTRADO AINDA.\n");
-            return;
-        }
+            printf("\nDIGITE O NOME QUE DESEJA BUSCAR:\n");
+            fgets(nome_busca, sizeof(nome_busca), stdin);
+            nome_busca[strcspn(nome_busca, "\n")] = '\0';
+
+            if (strlen(nome_busca) == 0)
+            {
+                printf("NOME INVALIDO! O CAMPO NAO PODE SER VAZIO.\n");
+            }
+
+        } while (strlen(nome_busca) == 0);
 
         for (int i = 0; i < n; i++)
         {
-            printf("%d - %s\n", i + 1, nome[i]);
+            if (strcmp(nome[i], nome_busca) == 0)
+            {
+                printf("\nREGISTRO %d\n", i + 1);
+                printf("NOME: %s\nIDADE: %d\nSEXO: %c\nDIAGNOSTICO: %s\n", nome[i], idade[i], sexo[i], diagnostico[i]);
+                c++;
+            }
+        }
+        if (c == 0)
+        {
+            printf("\nNAO EXISTEM REGISTROS COM ESSE NOME!\n");
         }
 
-        printf("\nDESEJA VOLTAR AO MENU?\n1 - SIM\n2 - NAO\n");
-        scanf("%d", &opcion);
+        c = 0;
+        break;
 
-    } while (opcion == 1);
+    case 2:
+    {
+        int idade_valida = 0;
+
+        do
+        {
+            printf("DIGITE A IDADE QUE DESEJA BUSCAR:\n");
+            fgets(idade_busca, sizeof(idade_busca), stdin);
+            idade_busca[strcspn(idade_busca, "\n")] = '\0';
+
+            if (validacao_numero(idade_busca))
+            {
+                idade_convertida = atoi(idade_busca);
+
+                if (idade_convertida >= 0 && idade_convertida <= 130)
+                {
+                    idade_valida = 1;
+                }
+                else
+                {
+                    printf("IDADE FORA DO INTERVALO VALIDO!\n");
+                }
+            }
+            else
+            {
+                printf("IDADE INVALIDA! DIGITE APENAS NUMEROS.\n");
+            }
+
+        } while (!idade_valida);
+
+        for (int i = 0; i < n; i++)
+        {
+            if (idade[i] == idade_convertida)
+            {
+                printf("\nREGISTRO %d:\n", i + 1);
+                printf("NOME: %s\nIDADE: %d\nSEXO: %c\nDIAGNOSTICO: %s\n", nome[i], idade[i], sexo[i], diagnostico[i]);
+                c++;
+            }
+        }
+
+        if (c == 0)
+        {
+            printf("NAO EXISTEM REGISTROS COM ESSA IDADE!\n");
+        }
+
+        c = 0;
+        break;
+    }
+
+    case 3:
+    {
+        char validacao_sexo[MAX];
+        int sexo_valido = 0;
+
+        do
+        {
+            printf("DIGITE O SEXO QUE DESEJA BUSCAR (M OU F):\n");
+            fgets(validacao_sexo, sizeof(validacao_sexo), stdin);
+            validacao_sexo[strcspn(validacao_sexo, "\n")] = '\0';
+
+            if (validacao_caracter(validacao_sexo))
+            {
+                sexo_busca = toupper(validacao_sexo[0]);
+                sexo_valido = 1;
+            }
+            else
+            {
+                printf("SEXO INVALIDO! DIGITE APENAS 'M' OU 'F'.\n");
+            }
+
+        } while (!sexo_valido);
+
+        for (int i = 0; i < n; i++)
+        {
+            if (sexo[i] == sexo_busca)
+            {
+                printf("\nREGISTRO %d:\n", i + 1);
+                printf("NOME: %s\nIDADE: %d\nSEXO: %c\nDIAGNOSTICO: %s\n", nome[i], idade[i], sexo[i], diagnostico[i]);
+                c++;
+            }
+        }
+
+        if (c == 0)
+        {
+            printf("NAO EXISTEM REGISTROS COM ESSE SEXO!\n");
+        }
+
+        c = 0;
+        break;
+    }
+
+    case 4:
+        do
+        {
+            printf("DIGITE O DIAGNOSTICO QUE DESEJA BUSCAR:\n");
+            fgets(diagnostico_busca, sizeof(diagnostico_busca), stdin);
+            diagnostico_busca[strcspn(diagnostico_busca, "\n")] = '\0';
+
+            if (strlen(diagnostico_busca) == 0)
+            {
+                printf("DIAGNOSTICO INVALIDO! O CAMPO NAO PODE SER VAZIO.\n");
+            }
+
+        } while (strlen(diagnostico_busca) == 0);
+
+        for (int i = 0; i < n; i++)
+        {
+            if (strcmp(diagnostico[i], diagnostico_busca) == 0)
+            {
+                printf("\nREGISTRO %d :\n", i + 1);
+                printf("\n\nNOME: %s\nIDADE: %d\nSEXO: %c\nDIAGNOSTICO: %s\n", nome[i], idade[i], sexo[i], diagnostico[i]);
+                c++;
+            }
+        }
+
+        if (c == 0)
+        {
+            printf("NAO EXISTEM REGISTROS COM ESSE DIAGNOSTICO!\n");
+        }
+        c = 0;
+        break;
+
+    default:
+        printf("\nOPCAO INVALIDA! DIGITE UMA OPCAO DE 1 A 4.\n");
+    }
+}
+void listarregistros()
+{
+    if (n == 0)
+    {
+        printf("SEM REGISTROS CADASTRADOS.\n");
+        return;
+    }
+
+    printf("REGISTROS CADASTRADOS:\n\n");
+
+    for (int i = 0; i < n; i++)
+    {
+        printf("\nREGISTRO %d\n", i + 1);
+        printf("NOME: %s\nIDADE: %d\nSEXO: %c\nDIAGNOSTICO: %s\n", nome[i], idade[i], sexo[i], diagnostico[i]);
+    }
 }
 
 void alterarregistro()
 {
     int op, opcion, confirmacao;
     char name[MAX], diagnostic[MAX], validacao_sexo[MAX];
-    char validacao_idade[MAX];
+    char validacao_atributo[MAX];
+
+    if (n == 0)
+    {
+        printf("SEM REGISTROS CADASTRADOS\n");
+        return;
+    }
 
     do
     {
         system("cls");
         buscarregistros();
 
-        do
-        {
         printf("DIGITE O NUMERO DO REGISTRO QUE DESEJA ALTERAR:\n");
         scanf("%d", &op);
         op--;
 
-        if (op < 0 || op >= n)
+        if (op < 0 || op > n)
         {
-            printf("\nREGISTRO INVALIDO!\n");
-            
+            printf("REGISTRO INVALIDO!\n");
+            return;
         }
-
-        }while(op < 0 || op >= n);
 
         do
         {
@@ -498,13 +489,13 @@ void alterarregistro()
             {
 
                 printf("DIGITE A IDADE QUE DESEJAR ADICIONAR:\n");
-                fgets(validacao_idade, sizeof(validacao_idade), stdin); // verifcacao de idade
+                fgets(validacao_atributo, sizeof(validacao_atributo), stdin); // verifcacao de idade
 
-                validacao_idade[strcspn(validacao_idade, "\n")] = '\0';
+                validacao_atributo[strcspn(validacao_atributo, "\n")] = '\0';
 
-                if (validacao_numero(validacao_idade))
+                if (validacao_numero(validacao_atributo))
                 {
-                    idade[op] = atoi(validacao_idade);
+                    idade[op] = atoi(validacao_atributo);
 
                     if (idade[op] >= 0 && idade[op] <= 130)
                     {
@@ -587,30 +578,49 @@ void alterarregistro()
 
 void removerregistros()
 {
-    int opcion, encontrou;
-    char nomeremover[MAX];
+    int encontrou;
+    char validacao_remover[MAX];
+    int opcao_remover;
+    int atributo_valido = 0;
+
+    if (n == 0)
+    {
+        printf("SEM REGISTROS CADASTRADOS\n");
+        return;
+    }
+
+    buscarregistros();
 
     do
     {
-        listarregistros();
 
-        do
+        printf("\nDIGITE O NUMERO DO REGISTRO QUE DESEJA REMOVER:\n");
+
+        fgets(validacao_remover, sizeof(validacao_remover), stdin);
+        validacao_remover[strcspn(validacao_remover, "\n")] = '\0';
+
+        if (validacao_numero(validacao_remover))
         {
-            printf("\nQUAL REGISTRO DESEJA REMOVER?\n");
+            opcao_remover = atoi(validacao_remover);
+            atributo_valido = 1;
+        }
+        else
+        {
+            printf("OPCAO INVALIDA!! POR FAVOR TENTE NOVAMENTE");
+        }
 
-            fgets(nomeremover, sizeof(nomeremover), stdin);
-            nomeremover[strcspn(nomeremover, "\n")] = '\0';
+    } while (!atributo_valido);
 
-            if (strlen(nomeremover) == 0)
-            {
-                printf("NOME INVALIDO! O CAMPO NAO PODE SER VAZIO.\n");
-            }
-
-        } while (strlen(nomeremover) == 0);
-
+    if (opcao_remover > n || opcao_remover < n)
+    {
+        printf("REGISTRO NAO ENCONTRADO");
+        return;
+    }
+    else
+    {
         for (int i = 0; i < n; i++)
         {
-            if (strcmp(nome[i], nomeremover) == 0)
+            if (nome[i] == nome[opcao_remover - 1] && idade[i] == idade[opcao_remover - 1] && sexo[i] == sexo[opcao_remover - 1] && diagnostico[i] == diagnostico[opcao_remover - 1])
             {
                 for (int j = i; j < n - 1; j++)
                 {
@@ -626,16 +636,11 @@ void removerregistros()
                 break;
             }
         }
-
-        if (!encontrou)
-        {
-            printf("\nNENHUM REGISTRO COM O NOME '%s' FOI ENCONTRADO.\n", nomeremover);
-        }
-
-        printf("\nDESEJA REMOVER OUTRO REGISTRO?\n1 - SIM\n2 - NAO\n");
-        scanf("%d", &opcion);
-
-    } while (opcion == 1);
+    }
+    if (!encontrou)
+    {
+        printf("\nNENHUM REGISTRO FOI ENCONTRADO");
+    }
 }
 
 int main()
@@ -674,7 +679,6 @@ int main()
         case 5:
             system("cls");
             removerregistros();
-            printf("O REGISTRO FOI REMOVIDO!\n");
             break;
 
         case 6:
